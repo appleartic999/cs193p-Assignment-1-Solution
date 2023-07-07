@@ -9,17 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
     
-    var Emojis: [String] = ["🚴", "🥊", "⚽️", "🎾", "🏊", "🏄‍♂️", "🤽‍♀️", "🤼‍♂️", "🤺", "🏎️", "🥋", "🏌️‍♂️",
-                            "✈️", "🚘", "🚎", "🚕", "🚁", "🛵", "🚲", "🚅", "🛺", "🛴", "🚢", "🚜", "🚚", "🚒", "🏎️",
-                            "🤣", "🥺", "😇", "😅", "😫", "😏", "🥶", "🥵", "😡", "🤯", "🤗", "😭",
-                            "😎", "🤓"
+    let sportsEmojis: [String] = ["🚴", "🥊", "⚽️", "🎾", "🏊", "🏄‍♂️", "🤽‍♀️", "🤼‍♂️", "🤺", "🏎️", "🥋", "🏌️‍♂️"
     ]
     
-    @State var themeNames = ["Sports", "Transport", "Faces"]
-    @State var themeImages = ["figure.badminton", "car.rear", "face.smiling"]
-    @State var startPosition = 0
-    @State var endPosition = 11 // inclusive
-    @State var deviceWidth = (UIScreen.main.bounds.width - 18)/4
+    let transportEmojis: [String] = ["✈️", "🚘", "🚎", "🚕", "🚁", "🛵", "🚲", "🚅", "🛺", "🛴", "🚢", "🚜", "🚚", "🚒", "🏎️"
+    ]
+    
+    let facesEmojis: [String] = ["🤣", "🥺", "😇", "😅", "😫", "😏", "🥶", "🥵", "😡", "🤯", "🤗", "😭",
+                                 "😎", "🤓"
+    ]
+    
+    let themeNames = ["Sports", "Transport", "Faces"]
+    let themeImages = ["figure.badminton", "car.rear", "face.smiling"]
+    let deviceWidth = (UIScreen.main.bounds.width - 18)/4
+    
+//    currentEmojis holds the default values
+    @State var currentEmojis: [String] = ["🚴", "🥊", "⚽️", "🎾", "🏊", "🏄‍♂️", "🤽‍♀️", "🤼‍♂️", "🤺", "🏎️", "🥋", "🏌️‍♂️"
+    ]
     
     var body: some View {
         VStack {
@@ -33,7 +39,7 @@ struct ContentView: View {
                     GridItem(.flexible(minimum: 64, maximum: deviceWidth)),
                     GridItem(.flexible(minimum: 64, maximum: deviceWidth))
                 ]) {
-                    ForEach(Emojis[startPosition...endPosition], id: \.self) { emoji in
+                    ForEach(currentEmojis[0..<currentEmojis.count], id: \.self) { emoji in
                         CardView(content: emoji)
                             .aspectRatio(2/3, contentMode: .fit)
                     }
@@ -44,22 +50,19 @@ struct ContentView: View {
             
             HStack {
                 Button {
-                    startPosition = 0
-                    endPosition = 11
+                    currentEmojis = sportsEmojis.shuffled()
                 } label: {
                     ThemeView(themeImage: themeImages[0], themeName: themeNames[0])
                 }
                 Spacer()
                 Button {
-                    startPosition = 12
-                    endPosition = 26
+                    currentEmojis = transportEmojis.shuffled()
                 } label: {
                     ThemeView(themeImage: themeImages[1], themeName: themeNames[1])
                 }
                 Spacer()
                 Button {
-                    startPosition = 27
-                    endPosition = 40
+                    currentEmojis = facesEmojis.shuffled()
                 } label: {
                     ThemeView(themeImage: themeImages[2], themeName: themeNames[2])
                 }
@@ -72,7 +75,7 @@ struct ContentView: View {
 
 struct CardView: View {
     
-    @State var content: String = ""
+    let content: String
     @State var isFaceUp: Bool = true
     
     var body: some View {
@@ -98,8 +101,8 @@ struct CardView: View {
 
 struct ThemeView: View {
     
-    @State var themeImage = ""
-    @State var themeName = ""
+    let themeImage: String
+    let themeName: String
     
     var body: some View {
         VStack {
